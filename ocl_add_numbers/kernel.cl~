@@ -1,0 +1,30 @@
+__kernel void add_numbers(__global float *x_pos,
+                          __global float *y_pos,
+                          __global float *result)
+{
+    float real = REAL_POS(x_pos);
+    float img = IMAGINARY_POS(y_pos);
+
+    float z_real = real;
+    float z_img = img;
+
+    //bool is_inside = true;
+
+    for (int i = 0; i < MAX_ITERATIONS; ++i)
+    {
+        float z_real_squared = z_real * z_real;
+        float z_img_squared = z_img * z_img;
+
+        if (z_real_squared + z_img_squared > 4)
+        {
+            // Not in the mandelbrot set
+            result = ((float) i / (float)MAX_ITERATIONS) * 255.f;
+        }
+        float tmp = z_real_squared - z_img_squared + real;
+        z_img = 2 * z_real * z_img + img;
+        z_real = tmp;
+    }
+
+    result = 0.0;
+}
+
